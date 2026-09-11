@@ -1,5 +1,5 @@
 using BibliotecaWeb.Models;
-using Core.Identity.Data;
+using Infrastructure.Identity;
 using Core.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

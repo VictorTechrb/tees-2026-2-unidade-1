@@ -1,11 +1,11 @@
-Ôªøusing System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models
 {
     public class AutorViewModel
     {
-        //[Display(Name ="C√≥digo")]
-        [Required(ErrorMessage = "C√≥digo do autor √© obrigat√≥rio")]
+        //[Display(Name ="CÛdigo")]
+        [Required(ErrorMessage = "CÛdigo do autor È obrigatÛrio")]
         [Key]
         public uint Id { get; set; }
 
@@ -14,7 +14,7 @@ namespace Models
         public string? Nome { get; set; }
 
         [Display(Name = "Data Nascimento")]
-        [DataType(DataType.Date, ErrorMessage = "Data v√°lida requerida")]
+        [DataType(DataType.Date, ErrorMessage = "Data v·lida requerida")]
         public DateTime DataNascimento { get; set; }
     }
 }

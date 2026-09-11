@@ -1,4 +1,4 @@
-ï»¿using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
@@ -14,7 +14,7 @@ namespace BibliotecaWeb.Helpers
         public EmailSender(IConfiguration configuration, IWebHostEnvironment environment)
         {
             _from = configuration["Smtp:From"];
-            _webRootPath = environment.WebRootPath; // ObtÃ©m o caminho fÃ­sico do wwwroot
+            _webRootPath = environment.WebRootPath; // Obtém o caminho físico do wwwroot
             _client = new SmtpClient
             {
                 Host = configuration["Smtp:Host"],
@@ -26,7 +26,7 @@ namespace BibliotecaWeb.Helpers
 
         public Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
-            // Caminho fÃ­sico para a imagem no servidor, dentro do wwwroot
+            // Caminho físico para a imagem no servidor, dentro do wwwroot
             var imagePath = Path.Combine(_webRootPath,"img", "logo.png");
 
             var mailMessage = new MailMessage
@@ -38,7 +38,7 @@ namespace BibliotecaWeb.Helpers
             };
             mailMessage.To.Add(email);
 
-            // Cria o conteÃºdo HTML com a imagem embutida
+            // Cria o conteúdo HTML com a imagem embutida
             var htmlWithHeaderAndFooter = $@"
             <html>
                 <body>
@@ -56,7 +56,7 @@ namespace BibliotecaWeb.Helpers
                 </body>
             </html>";
 
-            // Cria a visualizaÃ§Ã£o alternativa com o HTML e a imagem inline
+            // Cria a visualização alternativa com o HTML e a imagem inline
             var altView = AlternateView.CreateAlternateViewFromString(htmlWithHeaderAndFooter, null, MediaTypeNames.Text.Html);
 
             // Adiciona a imagem como um recurso inline
@@ -66,7 +66,7 @@ namespace BibliotecaWeb.Helpers
             };
             altView.LinkedResources.Add(inlineLogo);
 
-            // Adiciona a visualizaÃ§Ã£o alternativa (HTML com a imagem inline) ao email
+            // Adiciona a visualização alternativa (HTML com a imagem inline) ao email
             mailMessage.AlternateViews.Add(altView);
 
             return _client.SendMailAsync(mailMessage);

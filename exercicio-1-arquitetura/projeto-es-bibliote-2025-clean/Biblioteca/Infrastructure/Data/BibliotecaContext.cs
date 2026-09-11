@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Core;
+using Microsoft.EntityFrameworkCore;
 
-namespace Core;
+namespace Infrastructure.Data;
 
 public partial class BibliotecaContext : DbContext
 {

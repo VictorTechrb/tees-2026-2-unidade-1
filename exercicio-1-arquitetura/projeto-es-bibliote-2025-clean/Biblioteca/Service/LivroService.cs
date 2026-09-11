@@ -1,6 +1,7 @@
-﻿using Core;
+using Core;
 using Core.DTO;
 using Core.Service;
+using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Service
