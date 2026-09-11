@@ -28,10 +28,10 @@ O trabalho proposto consistem em inverter essa dependência, criando passa infor
 
 ## Sumário
 
-- [1. Pré-requisitos](#1-pré-requisitos-warning)
-- [2. Como executar](#2-como-executar-sparkles)
-- [3. Estrutura do projeto](#3-estrutura-do-projeto-dart)
-- [4. O que observar](#4-o-que-observar-computer)
+- [1. Pré-requisitos](#1-pré-requisitos)
+- [2. Como executar](#2-como-executar)
+- [3. Estrutura do projeto](#3-estrutura-do-projeto)
+- [4. O que observar](#4-o-que-observar)
 
 ## 1. Pré-requisitos:
 * .NET SDK 8.0 (ou superior)
@@ -43,11 +43,6 @@ O trabalho proposto consistem em inverter essa dependência, criando passa infor
 
 ## 3. Estrutura do projeto:
 
-<h2 id="estrutura">4. Estrutura do projeto</h2>
-
-<p>
-
-</p>
 
 ## 4. O que observar:
 
