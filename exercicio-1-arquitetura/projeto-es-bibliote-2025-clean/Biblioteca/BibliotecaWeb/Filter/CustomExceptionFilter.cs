@@ -1,4 +1,4 @@
-Ôªøusing BibliotecaWeb.Models;
+using BibliotecaWeb.Models;
 using Core.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -27,27 +27,27 @@ namespace BibliotecaWeb.Filter
             {
                 if (mySqlException.Number == 1451)
                 {
-                    result.ViewData["ErrorMessage"] = "N√£o √© poss√≠vel excluir este registro, pois ele est√° vinculado a outros dados no sistema.";
+                    result.ViewData["ErrorMessage"] = "N„o È possÌvel excluir este registro, pois ele est· vinculado a outros dados no sistema.";
                 }
                 else if (mySqlException.Number == 1062)
                 {
-                    result.ViewData["ErrorMessage"] = "Viola√ß√£o de chave √∫nica: j√° existe um registro com este valor.";
+                    result.ViewData["ErrorMessage"] = "ViolaÁ„o de chave ˙nica: j· existe um registro com este valor.";
                 }
                 else if (mySqlException.Number == 1048)
                 {
-                    result.ViewData["ErrorMessage"] = "Um campo obrigat√≥rio n√£o foi preenchido.";
+                    result.ViewData["ErrorMessage"] = "Um campo obrigatÛrio n„o foi preenchido.";
                 }
                 else if (mySqlException.Number == 1406)
                 {
-                    result.ViewData["ErrorMessage"] = "Um campo excedeu o tamanho m√°ximo permitido.";
+                    result.ViewData["ErrorMessage"] = "Um campo excedeu o tamanho m·ximo permitido.";
                 }
                 else if (mySqlException.Number == 1216 || mySqlException.Number == 1217)
                 {
-                    result.ViewData["ErrorMessage"] = "Viola√ß√£o de chave estrangeira: opera√ß√£o inv√°lida devido a dados relacionados.";
+                    result.ViewData["ErrorMessage"] = "ViolaÁ„o de chave estrangeira: operaÁ„o inv·lida devido a dados relacionados.";
                 }
                 else if (mySqlException.Number == 1366)
                 {
-                    result.ViewData["ErrorMessage"] = "Tipo de dado inv√°lido fornecido para um campo.";
+                    result.ViewData["ErrorMessage"] = "Tipo de dado inv·lido fornecido para um campo.";
                 }
                 else
                 {

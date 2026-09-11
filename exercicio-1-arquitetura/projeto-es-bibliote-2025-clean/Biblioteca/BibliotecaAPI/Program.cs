@@ -1,7 +1,8 @@
 
 using BibliotecaAPI.Filter;
 using Core;
-using Core.Identity.Data;
+using Infrastructure.Data;
+using Infrastructure.Identity;
 using Core.Service;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

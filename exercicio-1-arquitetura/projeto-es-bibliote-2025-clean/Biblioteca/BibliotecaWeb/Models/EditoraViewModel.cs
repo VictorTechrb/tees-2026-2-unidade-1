@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models
 {
@@ -14,7 +14,7 @@ namespace Models
         public string? Rua { get; set; }
         [StringLength(30)]
         public string? Bairro { get; set; }
-        [Display(Name = "Número")]
+        [Display(Name = "N�mero")]
         [StringLength(10)]
         public string? Numero { get; set; }
         [StringLength(8)]
