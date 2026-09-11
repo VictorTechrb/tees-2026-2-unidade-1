@@ -33,22 +33,22 @@ O trabalho proposto consistem em inverter essa dependência, criando passa infor
 - [3. Estrutura do projeto](#3-estrutura-do-projeto-dart)
 - [4. O que observar](#4-o-que-observar-computer)
 
-## 1. Pré-requisitos :warning:
+## 1. Pré-requisitos:
 * .NET SDK 8.0 (ou superior)
 * Banco de dados MySQL (ou banco em memória configurado para testes)
 
 
-## 2. Como executar :sparkles:
+## 2. Como executar:
 
 
-## 3. Estrutura do projeto :dart:
+## 3. Estrutura do projeto:
 
-<h2 id="estrutura">4. Estrutura do projeto :dart:</h2>
+<h2 id="estrutura">4. Estrutura do projeto</h2>
 
 <p>
 
 </p>
 
-## 4. O que observar :computer:
+## 4. O que observar:
 
 [⬆ Voltar ao topo](#adaptação-arquitetural--bibliotecaes)<br>
