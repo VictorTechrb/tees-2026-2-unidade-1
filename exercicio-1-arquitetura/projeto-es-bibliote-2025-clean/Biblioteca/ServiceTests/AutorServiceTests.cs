@@ -1,5 +1,6 @@
-﻿using Core;
+using Core;
 using Core.Service;
+using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Service.Tests

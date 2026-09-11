@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using BibliotecaWEB.Models;
 using Core;
 using Core.Service;

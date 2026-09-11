@@ -1,4 +1,4 @@
-ï»¿using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
 namespace Models
@@ -15,7 +15,7 @@ namespace Models
         [StringLength(50)]
         public string? Nome { get; set; }
         [DataType(DataType.Date)]
-        [Display(Name = "Data PublicaÃ§Ã£o")]
+        [Display(Name = "Data Publicação")]
         public DateTime? DataPublicacao { get; set; }
         [StringLength(300)]
         public string? Resumo { get; set; }
