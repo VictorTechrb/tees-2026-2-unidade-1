@@ -1,4 +1,5 @@
-﻿using Core;
+using Core;
+using Core.DTO;
 using Core.Repository;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -37,7 +38,7 @@ public class LivroRepository : ILivroRepository
 
 	public async Task<Livro?> Get(uint id){
 		return  await _context.Livros
-			.Include(l => l.Editora)
+			.Include(l => l.IdEditoraNavigation)
 			.FirstOrDefaultAsync(l => l.Id == id);
 	}
 
