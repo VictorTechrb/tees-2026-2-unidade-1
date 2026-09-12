@@ -1,4 +1,4 @@
-using Core;
+using Core.DTO;
 using Core.Repository;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -21,23 +21,26 @@ public class ItemAcervoRepository : IItemAcervoRepository{
     _context.Update(itemAcervo);
     _context.SaveChanges();
   }
-  public void Delete(int id){
+  public void Delete(uint id){
     var itemAcervo = _context.ItensAcervo.Find(id);
     if (itemAcervo != null){
       _context.Remove(itemAcervo);
       _context.SaveChanges();
     }
   }
-  public Itemacervo? Get(int id){
-    return _context.ItensAcervo.Find(id);
+  public async Task<Itemacervo?> Get(uint id){
+    return await _context.ItensAcervo.AsNoTracking().FirstOrDefaultAsync(i => i.Id == id);
   }
-  public IEnumerable<ItemAcervoDto> GetAll() =>
-    _context.ItensAcervo
-        .AsNoTracking()
-        .Select(i => new ItemAcervoDto
-        {
-            Id = i.Id,
-            NomeBiblioteca = i.Biblioteca.Nome,
-            NomeLivro = i.Livro.Nome,
-            SituacaoItemAcervo = i.Situacao.ToString()
-        });
+  public async Task<IEnumerable<ItemAcervoDto>> GetAll() {
+    var query = from Itemacervo in _context.ItensAcervo
+    orderby Itemacervo.NomeLivro ascending 
+    select new ItemAcervoDto{
+      Id = Itemacervo.Id,
+      NomeBiblioteca = Itemacervo.NomeBiblioteca,
+      NomeLivro = Itemacervo.NomeLivro,
+      SituacaoItemAcervo = Itemacervo.SituacaoItemAcervo
+    };
+    return await query.AsNoTracking().ToListAsync();
+
+  }
+}

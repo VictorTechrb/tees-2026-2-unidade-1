@@ -31,23 +31,27 @@ public class EditoraRepository : IEditoraRepository
       _context.SaveChanges();
     }
   }
-  public Editora? Get(int id)
+  public async Task<Editora?> Get(int id)
   {
-    return _context.Editoras.Find(id);
+    return await _context.Editoras.FindAsync(id);
   }
-  public IEnumerable<Editora> GetAll()
+  public async Task<IEnumerable<Editora>> GetAll()
   {
-    return _context.Editoras.AsNoTracking();
+    return await _context.Editoras.AsNoTracking().ToListAsync();
   }
-  public IEnumerable<Editora> GetByNome(string nome)
-  {
-    return _context.Editoras
-            .Where(e => e.Nome.StartsWith(nome)) 
-            .OrderBy(e => e.Nome)                 
-            .AsNoTracking();                       
-  }
-  public IEnumerable<Editora> GetByEstados()
-  {
-    return _context.Editoras.Where(e => e.Estado.Equals("SP") || e.Estado.Equals("RS")).AsNoTracking();
-  }
+  public async Task<IEnumerable<Editora>> GetByNome(string nome)
+{
+	return await _context.Editoras
+			.Where(e => e.Nome.StartsWith(nome))
+			.OrderBy(e => e.Nome)
+			.AsNoTracking()
+			.ToListAsync();
+}
+  public async Task<IEnumerable<Editora>> GetByEstados()
+{
+	return await _context.Editoras
+			.Where(e => e.Estado == "SP" || e.Estado == "RS")
+			.AsNoTracking()
+			.ToListAsync();
+}
 }

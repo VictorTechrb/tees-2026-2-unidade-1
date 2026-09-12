@@ -5,7 +5,7 @@ public interface ILivroRepository
     uint Create(Livro livro);
     void Edit(Livro livro);
     void Delete(uint id);
-    Livro? Get(uint id);
+    Task<Livro?> Get(uint id);
     IEnumerable<LivroDto> GetAll();
     IEnumerable<LivroDto> GetLivroDTO();
     IEnumerable<LivroDto> GetByNome(string nome);
