@@ -24,7 +24,11 @@ A regra de dependência é violada no escopo de `Autor`, onde o `AutorService.cs
 ---
 ## 2. Escolha Arquitetural e Justificativa
 
-O trabalho proposto consistem em inverter essa dependência, criando passa informar e explicar a arquitetura escolhida
+O trabalho proposto consistem em inverter essa dependência usando a Clean Architecture. Os principais motivos técnicos para essa escolha são:
+- **Terminologia intuitiva**: Utiliza termos e conceitos diretos e de fácil compreensão
+- **Material em .NET abundante**: Conta com amplo acervo de documentação, tutoriais e suporte da comunidade no ecossistema .NET
+- **Aplicação já em andamento no projeto**: Trata-se da estrutura cuja refatoração já está sendo executada no código da Biblioteca.
+
 
 ## Sumário
 
