@@ -2,6 +2,7 @@
 using BibliotecaAPI.Filter;
 using Core;
 using Core.Identity.Data;
+using Core.Ports.Entrada;
 using Core.Service;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

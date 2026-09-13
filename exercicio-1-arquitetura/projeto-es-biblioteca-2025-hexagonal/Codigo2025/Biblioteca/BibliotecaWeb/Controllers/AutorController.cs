@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core;
 using Core.Datatables;
+using Core.Ports.Entrada;
 using Core.Service;
 using Microsoft.AspNetCore.Mvc;
 using Models;

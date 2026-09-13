@@ -16,7 +16,7 @@ Software I e II. O projeto original está no repositório oficial da disciplina.
 | **Natureza desta entrega** | slide **EXTRA** — *"Implementar o mesmo agregado em uma segunda ou terceira arquitetura"* |
 
 > **Status:** documentação da arquitetura atual, escolha e justificativa — concluídas.
-> Implementação — em andamento; o plano de execução está em [`PLANO-HEXAGONAL.md`](PLANO-HEXAGONAL.md).
+> Implementação — em andamento.
 > As seções marcadas com ⏳ são preenchidas ao final da implementação.
 
 ---
@@ -437,6 +437,6 @@ de cada host.
 
 ## Documentos
 
-- [`PLANO-HEXAGONAL.md`](PLANO-HEXAGONAL.md) — plano de execução, divisão da dupla, checklist e commits
 - [`TESTES.md`](TESTES.md) — saídas literais do `dotnet test`; linha de base já registrada, coluna "depois" pendente
-- [`01-arquitetura.pdf`](01-arquitetura.pdf) — enunciado da atividade
+
+O enunciado da atividade e o plano de execução interno da dupla não são versionados.

@@ -100,7 +100,8 @@ if (autor.DataNascimento.Year < 1000)
 
 ## 3. DEPOIS — a preencher ⏳
 
-> Preencher ao concluir a Fase 3 do `PLANO-HEXAGONAL.md` (tarefas 26-29).
+> Preencher ao concluir a fase de integração, quando o `AutorService` já estiver
+> consumindo a porta e o adaptador com Entity Framework estiver ligado.
 
 ### 3.1 Testes existentes (regressão)
 

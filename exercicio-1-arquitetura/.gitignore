@@ -9,3 +9,6 @@
 
 # Logs
 *.log
+# Material de apoio e trabalho — nao versionado
+01-arquitetura.pdf
+PLANO-HEXAGONAL.md

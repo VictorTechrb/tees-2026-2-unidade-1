@@ -1,4 +1,5 @@
 using Core;
+using Core.Ports.Entrada;
 using Core.Service;
 using Microsoft.EntityFrameworkCore;
 using Service;

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Core;
+using Core.Ports.Entrada;
 using Core.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

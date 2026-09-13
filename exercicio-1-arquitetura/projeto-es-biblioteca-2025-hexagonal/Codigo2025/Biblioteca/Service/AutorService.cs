@@ -1,6 +1,7 @@
 ﻿using Core;
 using Core.Datatables;
 using Core.DTO;
+using Core.Ports.Entrada;
 using Core.Service;
 using Microsoft.EntityFrameworkCore;
 

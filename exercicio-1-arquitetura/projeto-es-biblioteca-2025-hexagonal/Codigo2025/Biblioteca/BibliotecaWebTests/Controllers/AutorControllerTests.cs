@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Core;
+using Core.Ports.Entrada;
 using Core.Service;
 using Mappers;
 using Microsoft.AspNetCore.Mvc;
