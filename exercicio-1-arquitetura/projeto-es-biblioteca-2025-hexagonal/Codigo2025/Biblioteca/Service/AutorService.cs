@@ -1,4 +1,5 @@
-﻿using Core;
+﻿using Adapters.Persistencia.EntityFramework;
+using Core;
 using Core.Datatables;
 using Core.DTO;
 using Core.Ports.Entrada;
