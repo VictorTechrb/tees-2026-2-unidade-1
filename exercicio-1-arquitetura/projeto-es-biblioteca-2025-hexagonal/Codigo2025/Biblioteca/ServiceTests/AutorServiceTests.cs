@@ -1,4 +1,5 @@
 ﻿using Adapters.Persistencia.EntityFramework;
+using Application;
 using Core;
 using Core.Ports.Entrada;
 using Core.Service;
@@ -33,7 +34,7 @@ namespace Service.Tests
             context.AddRange(autores);
             context.SaveChanges();
 
-            autorService = new AutorService(context);
+            autorService = new AutorService(new AutorRepositorioEF(context));
         }
 
         [TestMethod()]

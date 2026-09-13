@@ -3,6 +3,7 @@ using BibliotecaAPI.Filter;
 using Core;
 using Adapters.Identity;
 using Adapters.Persistencia.EntityFramework;
+using Application;
 using Core.Ports.Entrada;
 using Core.Ports.Saida;
 using Core.Service;

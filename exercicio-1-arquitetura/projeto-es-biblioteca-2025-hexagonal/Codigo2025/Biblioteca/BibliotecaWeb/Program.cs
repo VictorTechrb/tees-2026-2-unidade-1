@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Service;
 using Adapters.Identity;
 using Adapters.Persistencia.EntityFramework;
+using Application;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity.UI.Services;
