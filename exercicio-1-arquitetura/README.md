@@ -118,10 +118,6 @@ Este é o critério objetivo de que nada quebrou.
 
 **Arquitetura Hexagonal (Ports & Adapters).**
 
-O critério não foi "qual arquitetura é mais moderna". As três opções do professor resolvem a regra
-de dependência. O critério foi: **qual delas demonstra a inversão neste código com o menor número
-de mudanças desnecessárias.**
-
 ### 2.2 Por que Hexagonal, neste projeto
 
 **1. Metade do hexágono já existe.** `Core/Autor.cs` é POCO puro — sem `[Table]`, sem `[Key]`,
@@ -138,17 +134,13 @@ encontro 02 (para onde apontam as dependências).
 
 **3. Permite uma prova executável de isolamento.** Uma porta, vários adaptadores: o mesmo
 `IAutorRepositorioPort` recebe um adaptador Entity Framework (produção) e um adaptador em memória
-(teste). Com isso, a regra de negócio passa a ser testada **sem nenhuma referência ao Entity
-Framework** — o isolamento deixa de ser uma afirmação da documentação e vira um teste que roda.
+(teste). Com isso, a regra de negócio passa a ser testada **sem nenhuma referência ao Entity Framework** — o isolamento deixa de ser uma afirmação da documentação e vira um teste que roda.
 
-**4. Rende o comparativo que o slide EXTRA cobra.** Como esta é a segunda arquitetura sobre o mesmo
-agregado, a entrega precisa separar o que mudou de verdade do que só mudou de nome (seção 7).
+**4. Rende o comparativo que o slide EXTRA cobra.** Como esta é a segunda arquitetura sobre o mesmo agregado, a entrega precisa separar o que mudou de verdade do que só mudou de nome (seção 7).
 
 ### 2.3 Por que não Onion
 
-Onion propõe círculos concêntricos: Domain Model → Domain Services → Application Services →
-Infrastructure. Em um projeto com **um agregado, uma regra de negócio e uma interface de
-persistência**, o resultado seria:
+Onion propõe círculos concêntricos: Domain Model → Domain Services → Application Services → Infrastructure. Em um projeto com **um agregado, uma regra de negócio e uma interface de persistência**, o resultado seria:
 
 | Clean (entrega do grupo) | Onion equivalente |
 |---|---|
@@ -157,14 +149,7 @@ persistência**, o resultado seria:
 | `Service/AutorService` | `ApplicationServices/AutorService` |
 | `Infrastructure/AutorRepository` | `Infrastructure/AutorRepository` |
 
-**As setas de dependência seriam idênticas às da Clean.** Não há nenhuma decisão estrutural que
-Onion force e Clean não force neste código. Como segunda arquitetura, o comparativo resultante
-seria honesto mas vazio: "mudaram os nomes das pastas".
-
-### 2.4 Por que não repetir Clean
-
-É a entrega principal do grupo, concluída na branch `main`. Repeti-la não produziria nem a
-segunda implementação nem o comparativo pedidos pelo slide EXTRA.
+**As setas de dependência seriam idênticas às da Clean.** Não há nenhuma decisão estrutural que Onion force e Clean não force neste código. Como segunda arquitetura, o comparativo resultante seria honesto mas vazio: "mudaram os nomes das pastas".
 
 ---
 
@@ -326,13 +311,6 @@ contrato; o contrato não conhece a implementação.
 
 ## 7. Comparativo: Clean × Hexagonal no agregado Autor
 
-> Esta seção atende ao slide **EXTRA**: *"com um comparativo do que efetivamente mudou entre elas,
-> e do que só mudou de nome"*.
->
-> Os números da coluna **Clean** foram medidos na branch `main` em **13/09/2026**, com a entrega do
-> grupo já finalizada. Cada afirmação abaixo é verificável pelos comandos da seção 8, rodados nas
-> duas pastas.
-
 ### 7.1 O que é igual nas duas
 
 **As duas entregas cumprem a regra de dependência, e cumprem do mesmo jeito.** Em nenhuma delas o
@@ -403,11 +381,9 @@ public Autor? Get(uint id) => _autorRepository.Get(id).Result;
 public IEnumerable<Autor> GetAll() => _autorRepository.GetAll().Result;
 ```
 
-`IAutorRepositorioPort` manteve as 7 assinaturas síncronas, iguais às das queries originais, e o
-hexágono chama a porta direto, sem intermediação.
+`IAutorRepositorioPort` manteve as 7 assinaturas síncronas, iguais às das queries originais, e o hexágono chama a porta direto, sem intermediação.
 
-A consequência prática **não** apareceu nos testes — mudou uma linha nos dois casos. Ela aparece na
-fronteira entre a porta e o serviço: na Clean, cada leitura precisa destravar uma `Task`; aqui, não.
+A consequência prática **não** apareceu nos testes — mudou uma linha nos dois casos. Ela aparece na fronteira entre a porta e o serviço: na Clean, cada leitura precisa destravar uma `Task`; aqui, não.
 
 **4. Quantos adaptadores a porta aceita — e o que isso permite testar.**
 
@@ -417,13 +393,9 @@ fronteira entre a porta e o serviço: na Clean, cada leitura precisa destravar u
 | Testes da regra de negócio (ano < 1000) | 0 | 2 |
 | Testes que rodam sem Entity Framework | 0 | 8 |
 
-Este é o ponto onde as duas entregas mais divergem. O segundo adaptador não é enfeite: é ele que
-torna possível `ServiceTests/AutorServiceSemBancoTests.cs`, onde o `AutorService` é construído
-sobre uma `List<Autor>` e a regra de negócio — a única do agregado — é finalmente exercitada por
-teste. **No projeto original essa regra não tinha nenhum teste**, justamente porque exercitá-la
-exigia levantar um `DbContext`. Aqui o isolamento do domínio deixou de ser afirmação de
-documentação e virou teste que roda; na Clean ele continua igualmente verdadeiro, mas segue
-demonstrável apenas por leitura do código.
+Este é o ponto onde as duas entregas mais divergem. O segundo adaptador não é enfeite: é ele que torna possível `ServiceTests/AutorServiceSemBancoTests.cs`, onde o `AutorService` é construído
+sobre uma `List<Autor>` e a regra de negócio — a única do agregado — é finalmente exercitada por teste. **No projeto original essa regra não tinha nenhum teste**, justamente porque exercitá-la
+exigia levantar um `DbContext`. Aqui o isolamento do domínio deixou de ser afirmação de documentação e virou teste que roda; na Clean ele continua igualmente verdadeiro, mas segue demonstrável apenas por leitura do código.
 
 ### 7.3 O que só mudou de nome
 
