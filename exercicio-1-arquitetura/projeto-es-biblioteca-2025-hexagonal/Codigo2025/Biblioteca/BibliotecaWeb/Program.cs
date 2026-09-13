@@ -1,9 +1,11 @@
 using Core;
 using Core.Ports.Entrada;
+using Core.Ports.Saida;
 using Core.Service;
 using Microsoft.EntityFrameworkCore;
 using Service;
-using Core.Identity.Data;
+using Adapters.Identity;
+using Adapters.Persistencia.EntityFramework;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -24,6 +26,7 @@ namespace BibliotecaWeb
                 options.Filters.Add<CustomExceptionFilter>();
             }) ;
             builder.Services.AddTransient<IAutorService, AutorService>();
+            builder.Services.AddTransient<IAutorRepositorioPort, AutorRepositorioEF>();
             builder.Services.AddTransient <IEditoraService, EditoraService> ();
             builder.Services.AddTransient<ILivroService, LivroService>();
             builder.Services.AddTransient<IItemAcervoService, ItemAcervoService>();
