@@ -15,9 +15,10 @@ Software I e II. O projeto original está no repositório oficial da disciplina.
 | **Entrega principal do grupo** | **Clean Architecture**, na branch `main`, em `projeto-es-bibliote-2025-clean/` |
 | **Natureza desta entrega** | slide **EXTRA** — *"Implementar o mesmo agregado em uma segunda ou terceira arquitetura"* |
 
-> **Status:** documentação da arquitetura atual, escolha e justificativa — concluídas.
-> Implementação — em andamento.
-> As seções marcadas com ⏳ são preenchidas ao final da implementação.
+> **Status:** entrega concluída — documentação, implementação, integração e verificação.
+> Build com êxito, 23 testes verdes (14 em `ServiceTests` + 9 em `BibliotecaWebTests`) e o
+> domínio sem nenhuma referência a Entity Framework. Números e saídas literais nas seções 7 e 8
+> e em [`TESTES.md`](TESTES.md).
 
 ---
 
@@ -162,7 +163,7 @@ seria honesto mas vazio: "mudaram os nomes das pastas".
 
 ### 2.4 Por que não repetir Clean
 
-É a entrega principal do grupo, já em andamento na branch `main`. Repeti-la não produziria nem a
+É a entrega principal do grupo, concluída na branch `main`. Repeti-la não produziria nem a
 segunda implementação nem o comparativo pedidos pelo slide EXTRA.
 
 ---
@@ -217,10 +218,11 @@ public interface IAutorRepositorioPort
 ```
 
 **Porta mínima, por decisão.** A porta declara **apenas os 7 métodos que `IAutorService` expõe** —
-não os 11 métodos públicos que a classe `AutorService` tem hoje. Os outros quatro
+não os 11 métodos públicos da classe `AutorService` original. Os outros quatro
 (`GetAllOrderByNome`, `GetCountAutores`, `GetByName`, `GetOrderByDescending`) não são chamados por
-nenhum controller, view ou teste do projeto, e não migram. O princípio: **a porta declara o que o
-domínio precisa, não o que o banco sabe fazer.**
+nenhum controller, view ou teste do projeto, e não migraram. O princípio: **a porta declara o que o
+domínio precisa, não o que o banco sabe fazer.** A entrega Clean do grupo tomou a decisão oposta e
+levou os 11 — o contraste está na seção 7.
 
 ### 4.2 O adaptador com Entity Framework, fora do domínio
 
@@ -247,7 +249,7 @@ nenhum `using` de Entity Framework**. É o que torna a regra de negócio testáv
 | `BibliotecaAPI` | **adaptador de entrada** | HTTP/REST, Swagger, AutoMapper, filtros de exceção, **composition root** | todos |
 | `BibliotecaWeb` | **adaptador de entrada** | MVC, Razor, Identity, **composition root** | todos |
 | `Service` | legado | agregados não migrados | `Core`, `Adapters` |
-| `ServiceTests` | testes | regressão (com adaptador EF) e isolamento (com adaptador em memória) | `Core`, `Application`, `Adapters` |
+| `ServiceTests` | testes | regressão (com adaptador EF) e isolamento (com adaptador em memória) | `Application`, `Service` e, por transitividade, `Core` e `Adapters` |
 | `Util` | utilitário | validadores de CPF, CEP, telefone | — |
 
 ### Regra de dependência
@@ -301,9 +303,13 @@ contrato; o contrato não conhece a implementação.
    arquivo, não de conteúdo**: o `OnModelCreating` é o mesmo.
 3. Nasceu a porta de saída `IAutorRepositorioPort`, declarada no domínio.
 4. `AutorService` mudou de projeto (`Service` → `Application`) e passou a depender da porta
-   em vez do `DbContext`.
+   em vez do `DbContext`. O antigo `Service/AutorService.cs` foi **removido** na integração:
+   restou uma única classe `AutorService` no projeto, em `Application/`.
 5. `IAutorService` foi reclassificada como porta de entrada (`Core/Ports/Entrada/`).
-6. A regra de negócio ganhou testes que rodam sem banco — ela não tinha nenhum.
+6. Os dois `Program.cs` passaram a resolver `IAutorService` para `Application.AutorService` e
+   `IAutorRepositorioPort` para `AutorRepositorioEF` — a ligação porta/adaptador acontece só no
+   composition root.
+7. A regra de negócio ganhou testes que rodam sem banco — ela não tinha nenhum.
 
 ### Permaneceu igual
 
@@ -313,7 +319,8 @@ contrato; o contrato não conhece a implementação.
 - A lógica dos controllers — muda apenas a linha de `using`.
 - Views `.cshtml`, `Util`, AutoMapper, migrations, `appsettings.json`, o banco.
 - Os 9 testes de `BibliotecaWebTests`.
-- **Os 6 `Assert` de `AutorServiceTests`** — muda só a linha que monta o serviço.
+- **Os 6 testes de `AutorServiceTests`** — mudou uma linha só, a que monta o serviço
+  (`new AutorService(new AutorRepositorioEF(context))`); nenhum `Assert` foi tocado.
 
 ---
 
@@ -321,47 +328,139 @@ contrato; o contrato não conhece a implementação.
 
 > Esta seção atende ao slide **EXTRA**: *"com um comparativo do que efetivamente mudou entre elas,
 > e do que só mudou de nome"*.
+>
+> Os números da coluna **Clean** foram medidos na branch `main` em **13/09/2026**, com a entrega do
+> grupo já finalizada. Cada afirmação abaixo é verificável pelos comandos da seção 8, rodados nas
+> duas pastas.
 
-| | Clean (branch `main`) | Hexagonal (branch `Hexagonal`) |
+### 7.1 O que é igual nas duas
+
+**As duas entregas cumprem a regra de dependência, e cumprem do mesmo jeito.** Em nenhuma delas o
+domínio conhece o banco; em nenhuma delas o serviço conhece o `DbContext`. Isso precisa ser dito
+com todas as letras antes de qualquer diferença:
+
+| Critério da atividade | Clean (`main`) | Hexagonal (`Hexagonal`) |
 |---|---|---|
-| Interface de persistência | `Core/Repository/IAutorRepository` | `Core/Ports/Saida/IAutorRepositorioPort` |
-| Largura do contrato | 11 métodos (4 sem nenhum chamador) | 7 métodos — só o que `IAutorService` expõe |
-| Projeto que implementa | `Infrastructure` | `Adapters` |
-| Onde vive o `AutorService` | `Service`, que **referencia** `Infrastructure` | `Application`, cuja **única** referência é `Core` |
-| Lado de entrada | não nomeado | `Ports/Entrada` — controllers são adaptadores explícitos |
-| Adaptadores por porta | 1 (Entity Framework) | 2 (Entity Framework + memória) |
-| Teste da regra de negócio | exige `UseInMemoryDatabase` | roda sem nenhum Entity Framework |
+| Pacotes NuGet no projeto de domínio | **0** | **0** |
+| Contrato de persistência declarado no domínio | `Core/Repository/IAutorRepository` | `Core/Ports/Saida/IAutorRepositorioPort` |
+| Implementação com Entity Framework fora do domínio | `Infrastructure/Repositories/AutorRepository` | `Adapters/Persistencia/EntityFramework/AutorRepositorioEF` |
+| `AutorService` depende de | a abstração (`IAutorRepository`) | a abstração (`IAutorRepositorioPort`) |
+| Projeto onde vive o `AutorService` | `Service.csproj` — 0 pacotes, referencia só `Core` | `Application.csproj` — 0 pacotes, referencia só `Core` |
+| `Autor.cs` alterado | não | não |
+| Testes existentes passando | 15 (6 + 9) | 23 (14 + 9) |
+| Linhas alteradas em `AutorServiceTests` | 1 (a construção do serviço) | 1 (a construção do serviço) |
+| `Assert` alterados | 0 | 0 |
 
-### O que efetivamente mudou
+Duas observações que valem por si:
 
-**A separação do serviço em um projeto que não referencia infraestrutura.** Na Clean,
-`Service.csproj` referencia `Infrastructure.csproj`: nada impede, amanhã, que alguém volte a
-injetar o `DbContext` em um serviço. Em Hexagonal, `Application.csproj` referencia **somente**
-`Core` — a violação deixa de ser uma questão de disciplina da equipe e passa a ser **erro de
-compilação**.
+- **A inversão é completa nas duas.** Em ambas, o projeto que hospeda o `AutorService` referencia
+  exclusivamente `Core`: injetar um `DbContext` num serviço deixaria de compilar nas duas entregas.
+- **O custo de adaptação nos testes foi idêntico.** Nas duas, `AutorServiceTests` mudou uma única
+  linha — `new AutorService(new AutorRepository(context))` lá,
+  `new AutorService(new AutorRepositorioEF(context))` aqui — e nenhum `Assert` foi tocado.
 
-**O segundo adaptador.** Duas implementações da mesma porta transformam o isolamento do domínio de
-afirmação em documentação para teste que roda. É a diferença entre dizer que a regra de negócio
-não depende do banco e demonstrá-lo.
+### 7.2 O que efetivamente mudou
 
-**A largura do contrato.** Portar 11 métodos, quatro deles sem chamador, faz a porta descrever as
-capacidades do banco. Portar 7 faz a porta descrever a necessidade do domínio. É a mesma regra de
-dependência, com contratos de qualidade diferente.
+**1. O alcance da adaptação — e aqui a Clean foi mais longe.**
 
-### O que só mudou de nome
+A Clean inverteu **quatro agregados**: `Core/Repository/` declara `IAutorRepository`,
+`IEditoraRepository`, `ILivroRepository` e `IItemAcervoRepository`, com as quatro implementações
+correspondentes em `Infrastructure/Repositories/`. O resultado é que, na pasta da Clean, procurar
+`BibliotecaContext` dentro de `Service/` não devolve nenhuma ocorrência: o projeto de serviços
+inteiro ficou livre do Entity Framework.
 
-- `Infrastructure` × `Adapters` — mesmo papel, mesma posição no grafo de dependências.
-- `Repository` × `porta de saída (driven port)` — mesmo conceito, vocabulários diferentes.
-- `Entities` / `Core` × `hexágono` — mesma coisa, metáforas diferentes (círculos × hexágono).
-- `Autor.cs` é idêntico nas duas; a validação do ano de nascimento é idêntica nas duas;
-  a seta `implementação → contrato` é idêntica nas duas.
+Esta entrega inverteu **um agregado**. Foi decisão de escopo, declarada na seção 3 — *fatia
+vertical*: `Editora`, `Livro` e `ItemAcervo` continuam no projeto `Service` legado, recebendo
+`BibliotecaContext` por injeção. Em quantidade de código coberto, a Clean vai mais longe.
 
-### Conclusão
+| | Clean | Hexagonal |
+|---|---|---|
+| Agregados invertidos | 4 (`Autor`, `Editora`, `Livro`, `ItemAcervo`) | 1 (`Autor`) |
+| Serviços que ainda recebem `DbContext` | 0 | 3 (`Editora`, `Livro`, `ItemAcervo`) |
 
-**As duas arquiteturas satisfazem a regra de dependência de formas equivalentes.** A diferença real
-não está no desenho, e sim em **quanto da regra o compilador consegue fazer valer sozinho** — e em
-quanto do isolamento é demonstrável por teste, em vez de descrito em prosa. Boa parte do resto é
-vocabulário.
+**2. A largura do contrato.**
+
+`IAutorRepository` declara **11 métodos**; `IAutorRepositorioPort`, **7**. A diferença não é de
+estilo: quatro dos onze — `GetAllOrderByNome`, `GetCountAutores`, `GetByName` e
+`GetOrderByDescending` — **não têm nenhum chamador no projeto**. Procurar por cada um deles na
+pasta da Clean devolve exatamente duas linhas: a declaração na interface e a implementação no
+repositório. São métodos que já existiam na classe `AutorService` original e foram levados junto
+na migração.
+
+A porta desta entrega declara só os 7 métodos que `IAutorService` expõe. **A porta descreve a
+necessidade do domínio; um contrato de 11 métodos descreve as capacidades do banco.** É a mesma
+regra de dependência com contratos de larguras diferentes.
+
+**3. A forma das assinaturas.**
+
+Oito dos onze métodos de `IAutorRepository` são assíncronos (`Task<>`); `Create`, `Edit` e `Delete`
+continuaram síncronos. Como `IAutorService` permaneceu **síncrona e idêntica à original** nas duas
+entregas, a Clean resolve essa diferença dentro do próprio serviço:
+
+```csharp
+// Clean — Service/AutorService.cs
+public Autor? Get(uint id) => _autorRepository.Get(id).Result;
+public IEnumerable<Autor> GetAll() => _autorRepository.GetAll().Result;
+```
+
+`IAutorRepositorioPort` manteve as 7 assinaturas síncronas, iguais às das queries originais, e o
+hexágono chama a porta direto, sem intermediação.
+
+A consequência prática **não** apareceu nos testes — mudou uma linha nos dois casos. Ela aparece na
+fronteira entre a porta e o serviço: na Clean, cada leitura precisa destravar uma `Task`; aqui, não.
+
+**4. Quantos adaptadores a porta aceita — e o que isso permite testar.**
+
+| | Clean | Hexagonal |
+|---|---|---|
+| Implementações do contrato | 1 — `AutorRepository` (EF) | 2 — `AutorRepositorioEF` (EF) e `AutorRepositorioEmMemoria` (`List<Autor>`, zero EF) |
+| Testes da regra de negócio (ano < 1000) | 0 | 2 |
+| Testes que rodam sem Entity Framework | 0 | 8 |
+
+Este é o ponto onde as duas entregas mais divergem. O segundo adaptador não é enfeite: é ele que
+torna possível `ServiceTests/AutorServiceSemBancoTests.cs`, onde o `AutorService` é construído
+sobre uma `List<Autor>` e a regra de negócio — a única do agregado — é finalmente exercitada por
+teste. **No projeto original essa regra não tinha nenhum teste**, justamente porque exercitá-la
+exigia levantar um `DbContext`. Aqui o isolamento do domínio deixou de ser afirmação de
+documentação e virou teste que roda; na Clean ele continua igualmente verdadeiro, mas segue
+demonstrável apenas por leitura do código.
+
+### 7.3 O que só mudou de nome
+
+Boa parte do que parece diferença entre as duas é vocabulário:
+
+| Clean | Hexagonal | O que muda de fato |
+|---|---|---|
+| `Infrastructure` | `Adapters` | nada — mesmo papel, mesma posição no grafo de dependências |
+| `Repository` | porta de saída (*driven port*) | nada — mesmo conceito, tradições diferentes |
+| `Core/Service/IAutorService` | `Core/Ports/Entrada/IAutorService` | nada no contrato: **as 7 assinaturas são as mesmas, na mesma ordem**; muda o papel declarado |
+| círculos concêntricos | hexágono | a metáfora do desenho |
+| `Core` como camada mais interna | `Core` como interior do hexágono | a figura, não a seta |
+
+E o que é literalmente idêntico nas duas:
+
+- `Core/Autor.cs` — nenhuma linha alterada em nenhuma das duas entregas.
+- A regra de negócio: a mesma comparação `autor.DataNascimento.Year < 1000` lançando
+  `ServiceException`, com a mesma mensagem.
+- A seta que a atividade cobra: `implementação → contrato`, com o contrato dentro do domínio.
+- Os 9 testes de `BibliotecaWebTests`, intocados nas duas.
+
+### 7.4 Conclusão
+
+**As duas arquiteturas satisfazem a regra de dependência de formas equivalentes** — o domínio parou
+de depender do banco nas duas, pelo mesmo mecanismo, e a troca de nomes entre `Infrastructure` e
+`Adapters`, ou entre *repository* e *porta*, não muda nenhuma seta.
+
+As diferenças reais são três, e nenhuma delas é sobre qual arquitetura é melhor:
+
+1. **Alcance** — a Clean inverteu quatro agregados; esta entrega, um, por escolha de escopo.
+2. **Largura do contrato** — 11 métodos (4 sem chamador) contra 7: a diferença entre um contrato
+   que descreve o banco e um que descreve a necessidade do domínio.
+3. **Demonstrabilidade** — dois adaptadores na mesma porta transformam o isolamento em teste
+   executável; com um adaptador só, ele permanece correto, mas verificável apenas por leitura.
+
+Em uma frase: **a Clean do grupo aplicou a regra em mais lugares; esta entrega aplicou em um lugar
+só e a tornou verificável por teste.**
 
 ---
 
@@ -392,15 +491,23 @@ dotnet test ServiceTests/ServiceTests.csproj --nologo
 dotnet test BibliotecaWebTests/BibliotecaWebTests.csproj --nologo
 ```
 
-### Resultado ⏳
+### Resultado
+
+Medido em 13/09/2026, nesta branch, com .NET SDK 8.0.425. As saídas literais estão em
+[`TESTES.md`](TESTES.md).
 
 | Verificação | Antes | Depois |
 |---|---|---|
-| `ServiceTests` | 6 aprovados, 0 falhas | ⏳ |
-| `BibliotecaWebTests` | 9 aprovados, 0 falhas | ⏳ |
-| Testes da regra sem EF | 0 (não existiam) | ⏳ |
-| EF em `Core/` + `Application/` | 4 pacotes + 1 `DbContext` | ⏳ (esperado: nenhum) |
-| Referências de `Core` | 4 pacotes NuGet | ⏳ (esperado: nenhuma) |
+| Compilação da solução | êxito | **êxito, 0 erros** |
+| `ServiceTests` | 6 aprovados, 0 falhas | **14 aprovados, 0 falhas** (6 originais + 8 novos) |
+| `BibliotecaWebTests` | 9 aprovados, 0 falhas | **9 aprovados, 0 falhas** |
+| Testes da regra de negócio sem EF | 0 (não existiam) | **2** |
+| Testes que rodam sem EF | 0 | **8** |
+| EF em `Core/` + `Application/` | 7 ocorrências em `Core/` | **nenhuma — saída vazia** |
+| Pacotes NuGet em `Core.csproj` | 4 | **0** |
+| Referências de projeto de `Core` | — | **nenhuma** |
+| Referências de projeto de `Application` | — | **uma: `Core`** |
+| `Assert` alterados em `AutorServiceTests` | — | **0** |
 
 ---
 
@@ -437,6 +544,6 @@ de cada host.
 
 ## Documentos
 
-- [`TESTES.md`](TESTES.md) — saídas literais do `dotnet test`; linha de base já registrada, coluna "depois" pendente
+- [`TESTES.md`](TESTES.md) — saídas literais do `dotnet test`, da verificação de pureza e do sentido das dependências, antes e depois da adaptação
 
 O enunciado da atividade e o plano de execução interno da dupla não são versionados.
