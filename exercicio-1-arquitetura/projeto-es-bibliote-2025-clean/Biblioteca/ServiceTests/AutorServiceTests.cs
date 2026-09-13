@@ -1,6 +1,7 @@
 using Core;
 using Core.Service;
 using Infrastructure.Data;
+using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace Service.Tests
@@ -32,7 +33,7 @@ namespace Service.Tests
             context.AddRange(autores);
             context.SaveChanges();
 
-            autorService = new AutorService(context);
+            autorService = new AutorService(new AutorRepository(context));
         }
 
         [TestMethod()]
