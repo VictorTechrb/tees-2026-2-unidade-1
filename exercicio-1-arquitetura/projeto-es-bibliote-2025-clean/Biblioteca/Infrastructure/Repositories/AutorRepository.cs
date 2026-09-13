@@ -32,67 +32,83 @@ public class AutorRepository : IAutorRepository
             _context.SaveChanges();
         }
     }
-    public Autor? Get(uint id) => _context.Autors.Find(id);
-    public IEnumerable<Autor> GetAll() => _context.Autors.AsNoTracking();
-    public IEnumerable<Autor> GetAllOrderByNome()
-    {
-        return _context.Autors
-            .OrderByDescending(a => a.Nome)
-            .AsNoTracking();
+    public async Task<Autor?> Get(uint id){
+        return  await _context.Autors.FindAsync(id);
+        }
+    public async Task<IEnumerable<Autor>> GetAll() { 
+        return await _context.Autors.AsNoTracking().ToListAsync();
     }
-    public int GetCountAutores() => _context.Autors.Count();
-    public IEnumerable<Autor> GetByName(string nomeAutor)
+    public async Task<IEnumerable<Autor>> GetAllOrderByNome()
     {
-        return _context.Autors
+        return await _context.Autors
+            .OrderByDescending(a => a.Nome)
+            .AsNoTracking()
+            .ToListAsync();
+    }
+    public async Task<int> GetCountAutores() { 
+        return await _context.Autors.
+        CountAsync();
+    }
+    public async Task<IEnumerable<Autor>> GetByName(string nomeAutor)
+    {
+        return await _context.Autors
             .Where(a => a.Nome.Contains(nomeAutor))
             .AsNoTracking()
-            .ToList();
+            .ToListAsync();
     }
-    public IEnumerable<Autor> GetOrderByDescending()
+    public async Task<IEnumerable<Autor>> GetOrderByDescending()
     {
-        return _context.Autors.OrderByDescending(a => a.Nome);
+        return await _context.Autors.
+        OrderByDescending(a => a.Nome)
+        .AsNoTracking()
+        .ToListAsync();
     }
-    public IEnumerable<AutorDto> GetByNome(string nome)
+    public async Task<IEnumerable<AutorDto>> GetByNome(string nome)
     {
-        return _context.Autors
+        return await _context.Autors
             .Where(a => a.Nome.StartsWith(nome))
             .OrderBy(a => a.Nome)
             .Select(a => new AutorDto { Id = a.Id, Nome = a.Nome })
-            .AsNoTracking();
+            .AsNoTracking()
+            .ToListAsync();
     }
-    public DatatableResponse<Autor> GetDataPage(DatatableRequest request)
+    public async Task<DatatableResponse<Autor>> GetDataPage(DatatableRequest request)
     {
         var autores = _context.Autors.AsNoTracking();
-        var totalRecords = autores.Count();
+        var totalRecords = await autores.CountAsync();
+
         if (request.Search != null && request.Search.GetValueOrDefault("value") != null)
         {
-            var searchValue = request.Search.GetValueOrDefault("value") ?? string.Empty;
+            var searchValue = (request.Search.GetValueOrDefault("value") ?? string.Empty).ToLower();
             autores = autores.Where(a => a.Id.ToString().Contains(searchValue)
-                                      || a.Nome.ToLower().Contains(searchValue));
+                                    || a.Nome.ToLower().Contains(searchValue));
         }
-        if (request.Order != null && request.Order[0].GetValueOrDefault("column").Equals("0"))
+
+        if (request.Order != null && request.Order.Count > 0 && request.Order[0].GetValueOrDefault("column").Equals("0"))
         {
             autores = request.Order[0].GetValueOrDefault("dir").Equals("asc")
                 ? autores.OrderBy(a => a.Id)
                 : autores.OrderByDescending(a => a.Id);
         }
-        else if (request.Order != null && request.Order[0].GetValueOrDefault("column").Equals("1"))
+        else if (request.Order != null && request.Order.Count > 0 && request.Order[0].GetValueOrDefault("column").Equals("1"))
         {
             autores = request.Order[0].GetValueOrDefault("dir").Equals("asc")
                 ? autores.OrderBy(a => a.Nome)
                 : autores.OrderByDescending(a => a.Nome);
         }
-        else if (request.Order != null && request.Order[0].GetValueOrDefault("column").Equals("2"))
+        else if (request.Order != null && request.Order.Count > 0 && request.Order[0].GetValueOrDefault("column").Equals("2"))
         {
             autores = request.Order[0].GetValueOrDefault("dir").Equals("asc")
                 ? autores.OrderBy(a => a.DataNascimento)
                 : autores.OrderByDescending(a => a.DataNascimento);
         }
-        int countRecordsFiltered = autores.Count();
+
+        int countRecordsFiltered = await autores.CountAsync();
         autores = autores.Skip(request.Start).Take(request.Length);
+
         return new DatatableResponse<Autor>
         {
-            Data = autores.ToList(),
+            Data = await autores.ToListAsync(),
             Draw = request.Draw,
             RecordsFiltered = countRecordsFiltered,
             RecordsTotal = totalRecords

@@ -6,7 +6,7 @@ public interface IItemAcervoRepository
 {
     uint Create(Itemacervo itemAcervo);
     void Edit(Itemacervo itemAcervo);
-    void Delete(int id);
-    Itemacervo? Get(int id);
-    IEnumerable<ItemAcervoDto> GetAll();
+    void Delete(uint id);
+    Task<Itemacervo?> Get(uint id);
+    Task<IEnumerable<ItemAcervoDto>> GetAll();
 }

@@ -1,14 +1,16 @@
+using BibliotecaWeb.Filter;
+using BibliotecaWeb.Helpers;
 using Core;
+using Core.Repository;
 using Core.Service;
+using Infrastructure.Data;
+using Infrastructure.Identity;
+using Infrastructure.Repositories;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Service;
-using Infrastructure.Identity;
-using Infrastructure.Data;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using BibliotecaWeb.Helpers;
-using BibliotecaWeb.Filter;
 
 namespace BibliotecaWeb
 {
@@ -23,10 +25,18 @@ namespace BibliotecaWeb
             {
                 options.Filters.Add<CustomExceptionFilter>();
             }) ;
-            builder.Services.AddTransient<IAutorService, AutorService>();
-            builder.Services.AddTransient <IEditoraService, EditoraService> ();
-            builder.Services.AddTransient<ILivroService, LivroService>();
-            builder.Services.AddTransient<IItemAcervoService, ItemAcervoService>();
+            
+            builder.Services.AddScoped<IAutorRepository, AutorRepository>();
+            builder.Services.AddScoped<IEditoraRepository, EditoraRepository>();
+            builder.Services.AddScoped<ILivroRepository, LivroRepository>();
+            builder.Services.AddScoped<IItemAcervoRepository, ItemAcervoRepository>();
+
+            
+            builder.Services.AddScoped<IAutorService, AutorService>();
+            builder.Services.AddScoped<IEditoraService, EditoraService>();
+            builder.Services.AddScoped<ILivroService, LivroService>();
+            builder.Services.AddScoped<IItemAcervoService, ItemAcervoService>();
+
 
             // configura��o do envio de emails para o usu�rio
             builder.Services.AddTransient<IEmailSender, EmailSender>();

@@ -1,4 +1,5 @@
-﻿using Core;
+using Core;
+using Core.DTO;
 using Core.Repository;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +22,7 @@ public class LivroRepository : ILivroRepository
 
 	public void Delete(uint id)
 	{
-		var livro = context.Livros.Find(id);
+		var livro = _context.Livros.Find(id);
 		if (livro != null)
 		{
 			_context.Remove(livro);
@@ -35,15 +36,15 @@ public class LivroRepository : ILivroRepository
 		_context.SaveChanges();
 	}
 
-	public Livro? Get(uint id)	{
-		return  _context.Livros
-			.Include(l = &gt; l.Editora)
-			.FirstOrDefaultAsync(l =&gt; l.Id == id);
+	public async Task<Livro?> Get(uint id){
+		return  await _context.Livros
+			.Include(l => l.IdEditoraNavigation)
+			.FirstOrDefaultAsync(l => l.Id == id);
 	}
 
 	public IEnumerable<LivroDto> GetLivroDTO()
 	{
-		var query = from livro in context.Livros
+		var query = from livro in _context.Livros
 					select new LivroDto
 					{
 						Id = livro.Id,
@@ -71,21 +72,21 @@ public class LivroRepository : ILivroRepository
 	public IEnumerable<Autor> GetAutoresByLivro(int idLivro)
 	{
 		var livro =  _context.Livros
-			.Include(l = &gt; l.IdAutors) 
-			.FirstOrDefaultAsync(l = &gt; l.Id == idLivro); 
-		return livro?.IdAutors ?? new List
+			.Include(l => l.IdAutors) 
+			.FirstOrDefault(l => l.Id == idLivro); 
+		return livro?.IdAutors ?? new List<Autor>();
 	}
 
 	public IEnumerable<Livro> GetLivrosByNomeEditora(string nome)
 	{
 		return _context.Livros
-			.Include(l = &gt; l.IdEditoraNavigation) 
-		.Where(l = &gt; l.IdEditoraNavigation.Nome.StartsWith(nome)) 
-		.ToListAsync();
+			.Include(l => l.IdEditoraNavigation) 
+		.Where(l => l.IdEditoraNavigation.Nome.StartsWith(nome)) 
+		.ToList();
 	}
 	public IEnumerable<LivroDto> GetByNome(string nome)
 	{
-		var query = from livro in context.Livros
+		var query = from livro in _context.Livros
 					where livro.Nome.StartsWith(nome)
 					orderby livro.Nome
 					select new LivroDto
