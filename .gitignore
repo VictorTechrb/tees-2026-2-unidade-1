@@ -1,9 +1,43 @@
-exercicio-1-arquitetura/projeto-es-bibliote-2025-clean/Biblioteca/.vs/Biblioteca/FileContentIndex/2fcaf1aa-f1be-48ed-8233-01f46a5514b6.vsidx
-exercicio-1-arquitetura/projeto-es-bibliote-2025-clean/Biblioteca/.vs/Biblioteca/FileContentIndex/840da8c9-0c43-49c8-9a09-2e7a1c1c0a2d.vsidx
-exercicio-1-arquitetura/projeto-es-bibliote-2025-clean/Biblioteca/.vs/Biblioteca/FileContentIndex/99a3a2e8-4fb7-43d3-8d12-d27c074e5879.vsidx
-exercicio-1-arquitetura/projeto-es-bibliote-2025-clean/Biblioteca/.vs/Biblioteca/FileContentIndex/9a4507e1-af9e-440f-b345-5180ced6c6b6.vsidx
-exercicio-1-arquitetura/projeto-es-bibliote-2025-clean/Biblioteca/.vs/Biblioteca/FileContentIndex/c9d19e3e-1e45-46f7-8afe-3c7e669616af.vsidx
-exercicio-1-arquitetura/projeto-es-bibliote-2025-clean/Biblioteca/.vs/Biblioteca/v18/.suo
-exercicio-1-arquitetura/projeto-es-bibliote-2025-clean/Biblioteca/.vs/Biblioteca/v18/DocumentLayout.json
-exercicio-1-arquitetura/projeto-es-bibliote-2025-clean/Biblioteca/.vs/Biblioteca/v18/TestStore/0/002.testlog
-exercicio-1-arquitetura/projeto-es-bibliote-2025-clean/Biblioteca/.vs/Biblioteca/v18/TestStore/0/testlog.manifest
+# ---------------------------------------------
+# .NET — artefatos de compilação
+# ---------------------------------------------
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+*.log
+
+# ---------------------------------------------
+# Visual Studio / Rider / VS Code
+# ---------------------------------------------
+.vs/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# ---------------------------------------------
+# Testes
+# ---------------------------------------------
+[Tt]est[Rr]esult*/
+*.trx
+*.coverage
+*.coveragexml
+
+# ---------------------------------------------
+# NuGet
+# ---------------------------------------------
+*.nupkg
+packages/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# ---------------------------------------------
+# Sistema operacional
+# ---------------------------------------------
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
