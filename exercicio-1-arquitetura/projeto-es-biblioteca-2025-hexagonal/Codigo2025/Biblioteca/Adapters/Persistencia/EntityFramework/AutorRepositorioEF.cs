@@ -1,25 +1,24 @@
-﻿using Adapters.Persistencia.EntityFramework;
 using Core;
 using Core.Datatables;
 using Core.DTO;
-using Core.Ports.Entrada;
-using Core.Service;
+using Core.Ports.Saida;
 using Microsoft.EntityFrameworkCore;
 
-namespace Service
+namespace Adapters.Persistencia.EntityFramework
 {
     /// <summary>
-    /// Implementa serviços para manter dados do autor
+    /// Adaptador de saída (driven adapter) do agregado Autor sobre Entity Framework.
+    /// Implementa a porta <see cref="IAutorRepositorioPort"/> declarada no domínio:
+    /// aqui mora apenas o "como" persistir — as regras de negócio ficam no hexágono.
     /// </summary>
-    public class AutorService : IAutorService
+    public class AutorRepositorioEF : IAutorRepositorioPort
     {
         private readonly BibliotecaContext context;
 
-        public AutorService(BibliotecaContext context)
+        public AutorRepositorioEF(BibliotecaContext context)
         {
             this.context = context;
         }
-
 
         /// <summary>
         /// Criar um novo autor na base de dados
@@ -28,18 +27,25 @@ namespace Service
         /// <returns>id do autor</returns>
         public uint Create(Autor autor)
         {
-            if (autor.DataNascimento.Year < 1000)
-                throw new ServiceException("O ano de nascimento de autor deve ser maior do que 1000. Favor informar nova data.");
-
             context.Add(autor);
             context.SaveChanges();
             return autor.Id;
         }
 
         /// <summary>
+        /// Editar dados do autor na base de dados
+        /// </summary>
+        /// <param name="autor">dados do autor</param>
+        public void Edit(Autor autor)
+        {
+            context.Update(autor);
+            context.SaveChanges();
+        }
+
+        /// <summary>
         /// Remover o autor da base de dados
         /// </summary>
-        /// <param name="idAutor">id do autor</param>
+        /// <param name="id">id do autor</param>
         public void Delete(uint id)
         {
             var autor = context.Autors.Find(id);
@@ -51,23 +57,9 @@ namespace Service
         }
 
         /// <summary>
-        /// Editar dados do autor na base de dados
-        /// </summary>
-        /// <param name="autor"></param>
-        /// <exception cref="ServiceException"></exception>
-        public void Edit(Autor autor)
-        {
-            if (autor.DataNascimento.Year < 1000)
-                throw new ServiceException("O ano de nascimento de autor deve ser maior do que 1000. Favor informar nova data.");
-
-            context.Update(autor);
-            context.SaveChanges();
-        }
-
-        /// <summary>
         /// Buscar um autor na base de dados
         /// </summary>
-        /// <param name="idAutor">id autor</param>
+        /// <param name="id">id do autor</param>
         /// <returns>dados do autor</returns>
         public Autor? Get(uint id)
         {
@@ -82,51 +74,6 @@ namespace Service
         {
             return context.Autors.AsNoTracking();
         }
-
-
-        public IEnumerable<Autor> GetAllOrderByNome()
-        {
-            var query = from Autor autor in context.Autors
-                        orderby autor.Nome descending
-                        select autor;
-            return query.AsNoTracking();
-
-
-            //return context.Autors.
-            //    OrderByDescending(autor => autor.Nome).
-            //    AsNoTracking();
-        }
-
-        public int GetCountAutores()
-        {
-            return context.Autors.Count();
-        }
-
-        public IEnumerable<Autor> GetByName(string nomeAutor)
-        {   
-            var query = from autor in context.Autors
-                        where autor.Nome.Contains(nomeAutor)
-                        select autor;
-            return query.AsNoTracking().ToList();
-            
-            //return context.Autors.Where(
-            //    autor => autor.Nome.StartsWith(nomeAutor))
-            //    .AsNoTracking();
-        }
-
-
-
-
-        public IEnumerable<Autor> GetOrderByDescending()
-        {
-            var query = from autor in context.Autors
-                        orderby autor.Nome descending
-                        select autor;
-
-            return context.Autors.
-                OrderByDescending(autor => autor.Nome);
-        }
-
 
         /// <summary>
         /// Buscar autores iniciando com o nome
@@ -149,9 +96,8 @@ namespace Service
         /// <summary>
         /// Retorna uma página de dados
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
+        /// <param name="request">parâmetros de paginação, busca e ordenação</param>
+        /// <returns>página de autores</returns>
         public DatatableResponse<Autor> GetDataPage(DatatableRequest request)
         {
             var autores = context.Autors.AsNoTracking();
@@ -200,7 +146,6 @@ namespace Service
                 RecordsFiltered = countRecordsFiltered,
                 RecordsTotal = totalRecords
             };
-
         }
     }
 }

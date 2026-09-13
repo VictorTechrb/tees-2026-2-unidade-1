@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Core;
+using Microsoft.EntityFrameworkCore;
 
-namespace Core;
+namespace Adapters.Persistencia.EntityFramework;
 
 public partial class BibliotecaContext : DbContext
 {

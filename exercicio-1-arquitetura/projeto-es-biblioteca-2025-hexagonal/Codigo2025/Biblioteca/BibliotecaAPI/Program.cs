@@ -1,8 +1,10 @@
 
 using BibliotecaAPI.Filter;
 using Core;
-using Core.Identity.Data;
+using Adapters.Identity;
+using Adapters.Persistencia.EntityFramework;
 using Core.Ports.Entrada;
+using Core.Ports.Saida;
 using Core.Service;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +26,7 @@ namespace BibliotecaAPI
             builder.Services.AddSwaggerGen();
             
             builder.Services.AddTransient<IAutorService, AutorService>();
+            builder.Services.AddTransient<IAutorRepositorioPort, AutorRepositorioEF>();
             builder.Services.AddTransient<ILivroService, LivroService>();
             
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
