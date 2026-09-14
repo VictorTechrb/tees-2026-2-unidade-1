@@ -1,0 +1,14 @@
+# Compilação do .NET
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Logs
+*.log
+# Material de apoio e trabalho — nao versionado
+01-arquitetura.pdf
+PLANO-HEXAGONAL.md
