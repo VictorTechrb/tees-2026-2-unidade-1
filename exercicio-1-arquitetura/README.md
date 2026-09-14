@@ -9,10 +9,10 @@ Software I e II. O projeto original está no repositório oficial da disciplina.
 | | |
 |---|---|
 | **Agregado escolhido** | `Autor` (recomendado pelo professor — é o único com testes prontos) |
-| **Arquitetura desta branch** | **Hexagonal (Ports & Adapters)** |
+| **Arquitetura desta entrega** | **Hexagonal (Ports & Adapters)** |
 | **Pasta** | `projeto-es-biblioteca-2025-hexagonal/Codigo2025/Biblioteca/` |
-| **Branch** | `Hexagonal` |
-| **Entrega principal do grupo** | **Clean Architecture**, na branch `main`, em `projeto-es-bibliote-2025-clean/` |
+| **Entrega principal do grupo** | **Clean Architecture**, em `projeto-es-bibliote-2025-clean/` |
+| **Onde as duas ficam** | branch `main` — as duas arquiteturas convivem no repositório, uma pasta para cada |
 | **Natureza desta entrega** | slide **EXTRA** — *"Implementar o mesmo agregado em uma segunda ou terceira arquitetura"* |
 
 > **Status:** entrega concluída — documentação, implementação, integração e verificação.
@@ -317,7 +317,7 @@ contrato; o contrato não conhece a implementação.
 domínio conhece o banco; em nenhuma delas o serviço conhece o `DbContext`. Isso precisa ser dito
 com todas as letras antes de qualquer diferença:
 
-| Critério da atividade | Clean (`main`) | Hexagonal (`Hexagonal`) |
+| Critério da atividade | Clean (entrega principal) | Hexagonal (entrega extra) |
 |---|---|---|
 | Pacotes NuGet no projeto de domínio | **0** | **0** |
 | Contrato de persistência declarado no domínio | `Core/Repository/IAutorRepository` | `Core/Ports/Saida/IAutorRepositorioPort` |
@@ -465,7 +465,7 @@ dotnet test BibliotecaWebTests/BibliotecaWebTests.csproj --nologo
 
 ### Resultado
 
-Medido em 13/09/2026, nesta branch, com .NET SDK 8.0.425. As saídas literais estão em
+Medido em 13/09/2026, nesta pasta, com .NET SDK 8.0.425. As saídas literais estão em
 [`TESTES.md`](TESTES.md).
 
 | Verificação | Antes | Depois |
@@ -505,12 +505,19 @@ de cada host.
 
 ## 10. Como esta entrega se relaciona com a do grupo
 
-| | Branch `main` | Branch `Hexagonal` |
+As duas arquiteturas ficam lado a lado na branch `main`, **uma pasta para cada** — que é o que o
+slide EXTRA pede ao aceitar *"uma branch ou pasta própria"*. Nenhuma das duas depende da outra
+para compilar ou rodar os testes.
+
+| | Entrega principal | Entrega extra |
 |---|---|---|
 | Arquitetura | Clean Architecture | Hexagonal (Ports & Adapters) |
 | Pasta | `projeto-es-bibliote-2025-clean/` | `projeto-es-biblioteca-2025-hexagonal/` |
 | Papel | **entrega principal** (1,0 ponto da unidade) | **extra** (pontuação registrada à parte) |
 | Agregado | Autor | Autor — o mesmo, como o slide EXTRA pede |
+
+Como as duas pastas estão no mesmo lugar, os comandos da seção 8 podem ser rodados numa e noutra
+sem trocar de branch — é assim que os números do comparativo da seção 7 foram levantados.
 
 ---
 

@@ -1,7 +1,7 @@
 # Registro de Testes — Arquitetura Hexagonal
 
 Evidência do critério *"Testes existentes passando"* e da inversão de dependência.
-Pasta: `projeto-es-biblioteca-2025-hexagonal/Codigo2025/Biblioteca/` · Branch: `Hexagonal` · .NET SDK 8.0.425
+Pasta: `projeto-es-biblioteca-2025-hexagonal/Codigo2025/Biblioteca/` (branch `main`) · .NET SDK 8.0.425
 
 ---
 
@@ -100,7 +100,7 @@ if (autor.DataNascimento.Year < 1000)
 
 ## 3. DEPOIS — resultado da adaptação
 
-Medido em **13/09/2026**, na branch `Hexagonal`, com a integração concluída: `AutorService` vive no
+Medido em **13/09/2026**, nesta pasta, com a integração concluída: `AutorService` vive no
 projeto `Application`, consome `IAutorRepositorioPort` e recebe `AutorRepositorioEF` pelo
 composition root. As saídas abaixo são literais, com dois cortes de formatação: os caminhos
 absolutos aparecem encurtados como `...` e as linhas de restauração e de aviso do compilador
